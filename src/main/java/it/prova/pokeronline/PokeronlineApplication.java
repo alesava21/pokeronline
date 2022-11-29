@@ -38,7 +38,7 @@ public class PokeronlineApplication implements CommandLineRunner{
 			ruoloServiceInstance.inserisciNuovo(Ruolo.builder().descrizione("Classic User").codice(Ruolo.ROLE_CLASSIC_USER).build());
 		}
 		
-		if (ruoloServiceInstance.cercaPerDescrizioneECodice("Special User", Ruolo.ROLE_CLASSIC_USER) == null) {
+		if (ruoloServiceInstance.cercaPerDescrizioneECodice("Special User", Ruolo.ROLE_SPECIAL_USER) == null) {
 			ruoloServiceInstance.inserisciNuovo(Ruolo.builder().descrizione("Special User").codice(Ruolo.ROLE_SPECIAL_USER).build());
 		}
 
