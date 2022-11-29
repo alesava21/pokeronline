@@ -53,6 +53,7 @@ public class UtenteServiceImpl implements UtenteService {
 	public void inserisciNuovo(Utente utenteInstance) {
 		utenteInstance.stato(StatoUtente.CREATO)
 				.password(passwordEncoder.encode(utenteInstance.password()));
+		utenteInstance.dateCreated(new Date());
 		repository.save(utenteInstance);
 	}
 

@@ -27,6 +27,9 @@ public class PokeronlineApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		
+		
 		if (ruoloServiceInstance.cercaPerDescrizioneECodice("Administrator", Ruolo.ROLE_ADMIN) == null) {
 			ruoloServiceInstance.inserisciNuovo(Ruolo.builder().descrizione("Administrator").codice(Ruolo.ROLE_ADMIN).build());
 		}
@@ -76,7 +79,7 @@ public class PokeronlineApplication implements CommandLineRunner{
 			utenteServiceInstance.changeUserAbilitation(classicUser.id());
 		}
 
-		if (utenteServiceInstance.findByUsername("user1") == null) {
+		if (utenteServiceInstance.findByUsername("userSpecial") == null) {
 			Utente specialUser = Utente.builder()
 					.nome("alessandro")
 					.cognome("sava")
@@ -93,7 +96,7 @@ public class PokeronlineApplication implements CommandLineRunner{
 			utenteServiceInstance.changeUserAbilitation(specialUser.id());
 		}
 
-		if (utenteServiceInstance.findByUsername("user2") == null) {
+		if (utenteServiceInstance.findByUsername("user1") == null) {
 			Utente user1 = Utente.builder()
 					.nome("michele")
 					.cognome("esposito")
