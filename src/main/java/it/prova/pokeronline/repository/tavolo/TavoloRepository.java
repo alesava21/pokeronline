@@ -18,5 +18,8 @@ public interface TavoloRepository extends CrudRepository<Tavolo, Long>{
 	@Query("select t from Tavolo t join t.utenteCheCreaIlTavolo where t.id = ?1 and t.utenteCheCreaIlTavolo.id = ?2")
 	Optional<Tavolo> findByIdSpecialPlayer(Long idTavolo, Long idUtente);
 	
+	@Query("select t from Tavolo t join fetch t.utenteCheCreaIlTavolo join fetch t.utentiAlTavolo where t.id = ?1")
+	Tavolo findByIdEager(Long id);
+	
 	
 }

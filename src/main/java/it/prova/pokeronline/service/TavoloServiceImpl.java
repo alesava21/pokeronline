@@ -45,8 +45,7 @@ public class TavoloServiceImpl implements TavoloService {
 
 	@Override
 	public Tavolo caricaSingoloElementoEager(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return tavoloRepository.findByIdEager(id);
 	}
 
 	@Override
