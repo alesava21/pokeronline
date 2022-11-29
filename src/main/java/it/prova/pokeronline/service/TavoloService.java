@@ -18,5 +18,7 @@ public interface TavoloService {
 	Tavolo inserisciNuovo(Tavolo tavoloInstance);
 
 	void rimuovi(Long idToRemove);
+	
+	List<Tavolo> findByDenominazione(String denominazione);
 
 }

@@ -15,6 +15,7 @@ import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.repository.tavolo.TavoloRepository;
 import it.prova.pokeronline.repository.utente.UtenteRepository;
 import it.prova.pokeronline.web.api.exception.GiocatoriPresentiAlTavoloException;
+import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -73,8 +74,17 @@ public class TavoloServiceImpl implements TavoloService {
 
 	@Override
 	public void rimuovi(Long idToRemove) {
-		tavoloRepository.findById(idToRemove);
+		Tavolo tavolo = tavoloRepository.findById(idToRemove).orElseThrow(() -> new TavoloNotFoundException("Tavolo non trovato con id" + idToRemove));
+		
+		if (tavolo.utentiAlTavolo().size() >0) {
+			throw new GiocatoriPresentiAlTavoloException("Impossibile eliminare il tavolo, sono ancora presnti giocatori al suo interno");	
+		}
+		tavoloRepository.deleteById(idToRemove);
+	}
 
+	@Override
+	public List<Tavolo> findByDenominazione(String denominazione) {
+		return tavoloRepository.findByDenominazione(denominazione);
 	}
 
 }
