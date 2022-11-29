@@ -18,6 +18,11 @@ public class CustomTavoloRepositoryImpl implements CustomTavoloRepository{
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	
+	/*
+	 * FindByExample per l'admin, Si puo anche ricercare utentechecreailtavolo_id
+	 * Passando il giusto id.
+	 * */
 	@Override
 	public List<Tavolo> findByExample(Tavolo example) {
 		Map<String, Object> paramaterMap = new HashMap<String, Object>();
