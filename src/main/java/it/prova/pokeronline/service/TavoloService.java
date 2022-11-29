@@ -13,7 +13,7 @@ public interface TavoloService {
 
 	Tavolo caricaSingoloElementoEager(Long id);
 
-	Tavolo aggiorna(Tavolo tavoloInstance);
+	Tavolo aggiorna(Tavolo tavoloInstance, Tavolo tavoloCaricatoDb);
 
 	Tavolo inserisciNuovo(Tavolo tavoloInstance);
 
