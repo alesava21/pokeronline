@@ -21,6 +21,8 @@ public class TavoloServiceImpl implements TavoloService {
 
 	@Override
 	public List<Tavolo> listAllElements(boolean eager) {
+		if (eager)
+			return tavoloRepository.findAllEager();
 		return (List<Tavolo>) tavoloRepository.findAll();
 	}
 
