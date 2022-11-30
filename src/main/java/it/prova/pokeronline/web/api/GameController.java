@@ -24,29 +24,30 @@ import it.prova.pokeronline.web.api.exception.EsperienzaAccomulataNonSufficente;
 @RestController
 @RequestMapping("/api/gioco")
 public class GameController {
-	
+
 	@Autowired
 	private UtenteService utenteService;
-	
+
 	@Autowired
 	private TavoloService tavoloService;
-	
+
 	@PutMapping("/compraCredito/{credito}")
 	@ResponseStatus(HttpStatus.OK)
-	public Integer compraCredito (@PathVariable(value = "credito", required = true)Integer credito ) {
+	public Integer compraCredito(@PathVariable(value = "credito", required = true) Integer credito) {
 		if (credito < 1) {
 			throw new CreditoMinimoException("Impossibile comprare meno di 1$");
 		}
 		return utenteService.compraCredito(credito);
 	}
-	
+
 	@GetMapping("/lastgame")
 	@ResponseStatus(HttpStatus.OK)
 	public TavoloDTO dammiLastGame() {
-		Utente inSessione = utenteService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		Utente inSessione = utenteService
+				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 		return TavoloDTO.buildTavoloDTOFromModelLastGame(tavoloService.lastGame(inSessione.id()));
 	}
-	
+
 	@GetMapping("/gioca/{idTavolo}")
 	public UtenteDTO giocaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {
 
@@ -68,14 +69,13 @@ public class GameController {
 
 		if (!tavoloInstance.utentiAlTavolo().stream().anyMatch(giocatore -> giocatore.id() == inSessione.id())) {
 			// Chiamo il metodo che mi aggiunge e gioca la partita
-			return UtenteDTO.buildUtenteDTOFromModel(
-					utenteService.partecipaEGiocaPartita(inSessione, tavoloInstance));
+			return UtenteDTO.buildUtenteDTOFromModel(utenteService.partecipaEGiocaPartita(inSessione, tavoloInstance));
 		}
 
 		// se faccio parte del tavolo gioco direttamente
 		return UtenteDTO.buildUtenteDTOFromModel(utenteService.giocaPartita(inSessione));
 	}
-	
+
 	@PostMapping("/abbandonaPartita/{idTavolo}")
 	@ResponseStatus(HttpStatus.OK)
 	public UtenteDTO abbandonaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {

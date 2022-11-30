@@ -1,11 +1,8 @@
 package it.prova.pokeronline.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -139,12 +136,13 @@ public class TavoloServiceImpl implements TavoloService {
 //				contatore++;
 //			}
 //		}
-		for (Iterator<Utente> utenteDaEliminare = tavoloInstance.utentiAlTavolo().iterator(); utenteDaEliminare.hasNext();) {
+		for (Iterator<Utente> utenteDaEliminare = tavoloInstance.utentiAlTavolo().iterator(); utenteDaEliminare
+				.hasNext();) {
 			Utente utente = utenteDaEliminare.next();
 			if (utente.id() == inSessione.id()) {
 				utenteDaEliminare.remove();
-				contatore ++;
-				
+				contatore++;
+
 			}
 		}
 
