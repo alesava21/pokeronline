@@ -78,8 +78,8 @@ public class GameController {
 	
 	@PostMapping("/abbandonaPartita/{idTavolo}")
 	@ResponseStatus(HttpStatus.OK)
-	public void abbandonaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {
-		tavoloService.abbandonaPartita(idTavolo);
+	public UtenteDTO abbandonaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {
+		return UtenteDTO.buildUtenteDTOFromModel(tavoloService.abbandonaPartita(idTavolo));
 	}
 
 }

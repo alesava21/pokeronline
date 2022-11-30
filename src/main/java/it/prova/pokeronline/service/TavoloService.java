@@ -3,6 +3,7 @@ package it.prova.pokeronline.service;
 import java.util.List;
 
 import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Utente;
 
 public interface TavoloService {
 
@@ -26,6 +27,6 @@ public interface TavoloService {
 
 	public Tavolo lastGame(Long id);
 
-	public void abbandonaPartita(Long idTavolo);
+	public Utente abbandonaPartita(Long idTavolo);
 
 }

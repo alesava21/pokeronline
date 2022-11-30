@@ -44,13 +44,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
  				
 				.authorizeHttpRequests() 
 				.antMatchers("/api/auth/login").permitAll()
-				.antMatchers("/api/tavolo/cercaTavolo").hasAnyRole("ADMIN", "SPECIAL_PLAYER", "PLAYER")
-				.antMatchers("/api/tavolo/cercaTavoliCreatiDaMe").hasAnyRole("ADMIN", "SPECIAL_PLAYER")
-				.antMatchers("/api/tavolo/**").hasAnyRole("ADMIN", "SPECIAL_PLAYER")
+				.antMatchers("/api/tavolo/cercaTavolo").hasAnyRole("ROLE_ADMIN", "ROLE_SPECIAL_USER", "ROLE_CLASSIC_USER")
+				.antMatchers("/api/tavolo/cercaTavoliCreatiDaMe").hasAnyRole("ROLE_ADMIN", "ROLE_SPECIAL_USER")
+				.antMatchers("/api/tavolo/**").hasAnyRole("ADMIN", "ROLE_SPECIAL_USER")
 				.antMatchers("/api/utente/userInfo").authenticated()
-				.antMatchers("/api/utente/aggiornaCredito/**").authenticated()
-				.antMatchers("/api/utente/**").hasRole("ADMIN")
-				.antMatchers("/**").hasAnyRole("ADMIN", "SPECIAL_PLAYER", "PLAYER")
+				.antMatchers("/api/utente/compraCredito/**").authenticated()
+				.antMatchers("/api/utente/**").hasRole("ROLE_ADMIN")
+				.antMatchers("/api/gioco/**").authenticated()
+				.antMatchers("/**").hasAnyRole("ROLE_ADMIN", "ROLE_SPECIAL_USER", "ROLE_CLASSIC_USER")
 				// .antMatchers("/anonymous*").anonymous()
 				.anyRequest().authenticated()
 				.and()
@@ -67,5 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// Adding the JWT filter
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+
 
 }
