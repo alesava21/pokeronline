@@ -24,4 +24,6 @@ public List<Tavolo> listAll();
 	
 	public void inserisciNuovoDaApplication(Tavolo tavoloInstance);
 	
+	public Tavolo lastGame(Long id);
+	
 }

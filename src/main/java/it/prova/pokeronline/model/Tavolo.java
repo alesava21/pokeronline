@@ -48,6 +48,6 @@ public class Tavolo {
 	private Utente utenteCheCreaIlTavolo;
 	
 	@Builder.Default
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tavoloACuiStoGiocando")
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Utente> utentiAlTavolo = new ArrayList<>();
 }

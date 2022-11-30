@@ -18,6 +18,8 @@ public interface TavoloRepository extends CrudRepository<Tavolo, Long>, CustomTa
 	
 	@Query("from Tavolo t left join fetch t.utenteCheCreaIlTavolo u where u.id = :id")
 	List<Tavolo> listAllByMyCreati(Long id);
+	
+	Optional<Tavolo> findByutentiAlTavolo_id(Long id);
 
 	
 	

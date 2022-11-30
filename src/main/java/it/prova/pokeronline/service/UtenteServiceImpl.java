@@ -3,8 +3,6 @@ package it.prova.pokeronline.service;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Access;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pokeronline.model.StatoUtente;
+import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.repository.utente.UtenteRepository;
-import lombok.experimental.Accessors;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,6 +23,9 @@ public class UtenteServiceImpl implements UtenteService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private TavoloService tavoloService;
 
 	public List<Utente> listAllUtenti() {
 		return (List<Utente>) repository.findAll();
@@ -108,6 +109,44 @@ public class UtenteServiceImpl implements UtenteService {
 		
 		repository.save(inSesione);
 		return inSesione.creditoAccumulato();
+	}
+
+	@Override
+	@Transactional
+	public Utente giocaPartita(Utente inSessione) {
+		
+		inSessione.creditoAccumulato(inSessione.creditoAccumulato() + UtenteServiceImpl.simulaPartita());
+		if (inSessione.creditoAccumulato() < 0)
+			inSessione.creditoAccumulato(0);
+
+		repository.save(inSessione);
+		return inSessione;
+	}
+
+	private static Integer simulaPartita() {
+
+		Double segno = Math.random();
+		Double somma = 0.0;
+		if (segno >= 0.5)
+			somma = Math.random() * 1000;
+		else
+			somma = Math.random() * -1000;
+
+		return (int) (segno * somma.intValue());
+	}
+
+	@Override
+	@Transactional
+	public Utente partecipaEGiocaPartita(Utente inSessione, Tavolo tavoloInstance) {
+		tavoloInstance.utentiAlTavolo().add(inSessione);
+
+		// gioco la partita.
+		inSessione.creditoAccumulato(inSessione.creditoAccumulato() + UtenteServiceImpl.simulaPartita());
+		if (inSessione.creditoAccumulato() < 0)
+			inSessione.creditoAccumulato(0);
+
+		repository.save(inSessione);
+		return inSessione;
 	}
 
 }

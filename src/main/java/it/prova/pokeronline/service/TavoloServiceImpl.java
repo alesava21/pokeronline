@@ -14,6 +14,7 @@ import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.repository.tavolo.TavoloRepository;
 import it.prova.pokeronline.repository.utente.UtenteRepository;
 import it.prova.pokeronline.web.api.exception.GiocatoriPresentiAlTavoloException;
+import it.prova.pokeronline.web.api.exception.NonSeiPresenteANessunTavoloException;
 import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
 
 @Service
@@ -52,9 +53,10 @@ public class TavoloServiceImpl implements TavoloService{
 	@Transactional
 	public void inserisciNuovo(Tavolo tavoloInstance) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println(username);
 		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
 		tavoloInstance.utenteCheCreaIlTavolo(utenteInSessionUtente);
-		
+		System.out.println(tavoloInstance.utenteCheCreaIlTavolo().username());
 		tavoloInstance.dataCreazione(LocalDate.now());
 		if(tavoloInstance.cifraMinima() == null)
 			tavoloInstance.cifraMinima();
@@ -93,6 +95,7 @@ public class TavoloServiceImpl implements TavoloService{
 		return repository.listAllByMyCreati(utenteInSessionUtente.id());
 	}
 	
+	
 	@Override
 	public void inserisciNuovoDaApplication(Tavolo tavoloInstance) {
 		tavoloInstance.dataCreazione(LocalDate.now());
@@ -101,4 +104,15 @@ public class TavoloServiceImpl implements TavoloService{
 		repository.save(tavoloInstance);
 	}
 
+	@Override
+	public Tavolo lastGame(Long id) {
+		Tavolo resul = repository.findByutentiAlTavolo_id(id).orElse(null);
+	
+		if (resul == null) {
+			throw new NonSeiPresenteANessunTavoloException("ATTENZIONE: non sei presente a nessun tavolo");
+		}
+		return resul;
+	}
+
+	
 }

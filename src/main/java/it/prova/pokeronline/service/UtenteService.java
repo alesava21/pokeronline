@@ -2,6 +2,7 @@ package it.prova.pokeronline.service;
 
 import java.util.List;
 
+import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.model.Utente;
 
 public interface UtenteService {
@@ -29,5 +30,10 @@ public interface UtenteService {
 	public Utente findByUsername(String username);
 	
 	public Integer compraCredito(Integer credito);
+	
+	public Utente giocaPartita(Utente inSessione);
+	
+	public Utente partecipaEGiocaPartita(Utente inSessione, Tavolo tavoloInstance);
+	
 
 }
