@@ -1,8 +1,6 @@
 package it.prova.pokeronline.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pokeronline.model.Ruolo;
 import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.repository.tavolo.TavoloRepository;
 import it.prova.pokeronline.repository.utente.UtenteRepository;
 import it.prova.pokeronline.web.api.exception.GiocatoriPresentiAlTavoloException;
@@ -55,13 +54,13 @@ public class TavoloServiceImpl implements TavoloService {
 	}
 
 	@Override
-	public Tavolo aggiorna(Tavolo tavoloInstance, Tavolo tavoloCaricatoDb) {
-		if (tavoloCaricatoDb.utentiAlTavolo().size() > 0) {
+	@Transactional
+	public Tavolo aggiorna(Tavolo tavoloInstance, Tavolo tavoloCaricatoDalDB) {
+		if (tavoloCaricatoDalDB.utentiAlTavolo().size() > 0)
 			throw new GiocatoriPresentiAlTavoloException(
-					"Non puoi modificare questo tavolo, ci sono ancora giocatori presenti");
-		}
-		return tavoloRepository.save(tavoloInstance);
+					"Impossibile eliminare questo Tavolo, sono ancora presenti dei giocatori al suo interno");
 
+		return tavoloRepository.save(tavoloInstance);
 	}
 
 	@Override
@@ -74,12 +73,8 @@ public class TavoloServiceImpl implements TavoloService {
 	}
 
 	@Override
+	@Transactional
 	public void rimuovi(Long idToRemove) {
-		Tavolo tavolo = tavoloRepository.findById(idToRemove).orElseThrow(() -> new TavoloNotFoundException("Tavolo non trovato con id" + idToRemove));
-		
-		if (tavolo.utentiAlTavolo().size() >0) {
-			throw new GiocatoriPresentiAlTavoloException("Impossibile eliminare il tavolo, sono ancora presnti giocatori al suo interno");	
-		}
 		tavoloRepository.deleteById(idToRemove);
 	}
 
@@ -90,6 +85,19 @@ public class TavoloServiceImpl implements TavoloService {
 
 	@Override
 	public List<Tavolo> listAll() {
-		return (List<Tavolo>)tavoloRepository.findAll();	}
+		return (List<Tavolo>) tavoloRepository.findAll();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Tavolo> findByExample(Tavolo example) {
+		return tavoloRepository.findByExample(example);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id) {
+		return tavoloRepository.findByExampleSpecialPlayer(example, id);
+	}
 
 }

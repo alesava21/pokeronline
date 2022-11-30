@@ -12,6 +12,8 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import it.prova.pokeronline.model.Ruolo;
 import it.prova.pokeronline.model.StatoUtente;
 import it.prova.pokeronline.model.Utente;
@@ -20,10 +22,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Builder
-@Getter @Setter
+@Getter @Setter @ToString
 @NoArgsConstructor @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UtenteDTO {
 
 	private Long id;

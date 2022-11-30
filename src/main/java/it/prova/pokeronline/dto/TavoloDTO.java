@@ -10,8 +10,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Utente;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @Builder
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TavoloDTO {
 	
 	private Long id;
@@ -31,22 +34,21 @@ public class TavoloDTO {
 	@NotBlank
 	private String denominazione;
 	private LocalDate dataCreazione;
-	@NotNull
-	@JsonIgnoreProperties(value = { "tavolo" })
 	private UtenteDTO utenteCheCreaIlTavolo;
 	
 	@Builder.Default
-	@JsonIgnoreProperties(value = { "tavolo" })
 	private List<UtenteDTO> utentiAlTavolo = new ArrayList<>();
 	
 	public Tavolo buildTavoloModel() {
+		Utente creatore = utenteCheCreaIlTavolo.buildUtenteModel(true);
+		System.out.println(creatore == null);
 		Tavolo result = Tavolo.builder()
 				.id(id)
 				.esperienzaMinima(esperienzaMinima)
 				.cifraMinima(cifraMinima)
 				.denominazione(denominazione)
 				.dataCreazione(dataCreazione)
-				.utenteCheCreaIlTavolo(utenteCheCreaIlTavolo.buildUtenteModel(true))
+				.utenteCheCreaIlTavolo(creatore)
 				.utentiAlTavolo(UtenteDTO.createUtenteListModelFromDTO(utentiAlTavolo))
 				.build();
 		return result;

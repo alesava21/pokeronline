@@ -20,12 +20,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Accessors(fluent = true)
-@Getter @Setter
+@Getter @Setter @ToString
 @Entity
 @Table(name = "tavolo")
 public class Tavolo {
