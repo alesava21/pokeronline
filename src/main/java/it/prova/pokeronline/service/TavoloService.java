@@ -23,5 +23,5 @@ public List<Tavolo> listAll();
 	public void rimuovi(Long idToRemove);
 	
 	public void inserisciNuovoDaApplication(Tavolo tavoloInstance);
-
+	
 }

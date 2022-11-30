@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Access;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,6 +93,21 @@ public class UtenteServiceImpl implements UtenteService {
 
 	public Utente findByUsername(String username) {
 		return repository.findByUsername(username).orElse(null);
+	}
+
+	@Override
+	@Transactional
+	public Integer compraCredito(Integer credito) {
+		Utente inSesione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+		
+		if (inSesione.creditoAccumulato() == null) {
+			inSesione.creditoAccumulato(credito);
+		}else {
+			inSesione.creditoAccumulato(inSesione.creditoAccumulato() + credito);
+		}
+		
+		repository.save(inSesione);
+		return inSesione.creditoAccumulato();
 	}
 
 }
