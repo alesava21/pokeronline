@@ -17,87 +17,88 @@ import it.prova.pokeronline.web.api.exception.GiocatoriPresentiAlTavoloException
 import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
 
 @Service
-@Transactional(readOnly = true)
-public class TavoloServiceImpl implements TavoloService {
+public class TavoloServiceImpl implements TavoloService{
 
 	@Autowired
-	private TavoloRepository tavoloRepository;
-
-	@Autowired
-	private UtenteService utenteService;
-
+	private TavoloRepository repository;
+	
 	@Autowired
 	private UtenteRepository utenteRepository;
-
+	
 	@Override
-	public List<Tavolo> listAllElements(boolean eager) {
-		if (eager)
-			return tavoloRepository.findAllEager();
-		return (List<Tavolo>) tavoloRepository.findAll();
+	public List<Tavolo> listAll() {
+		return (List<Tavolo>)repository.findAll();
 	}
 
 	@Override
 	public Tavolo caricaSingoloElemento(Long id) {
-		if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-				.anyMatch(roleItem -> roleItem.getAuthority().equals(Ruolo.ROLE_SPECIAL_USER))) {
-			return tavoloRepository.findByIdSpecialPlayer(id, utenteRepository
-					.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get().id())
-					.orElse(null);
-
-		}
-		return tavoloRepository.findById(id).orElse(null);
-	}
-
-	@Override
-	public Tavolo caricaSingoloElementoEager(Long id) {
-		return tavoloRepository.findByIdEager(id);
+		return repository.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
-	public Tavolo aggiorna(Tavolo tavoloInstance, Tavolo tavoloCaricatoDalDB) {
-		if (tavoloCaricatoDalDB.utentiAlTavolo().size() > 0)
-			throw new GiocatoriPresentiAlTavoloException(
-					"Impossibile eliminare questo Tavolo, sono ancora presenti dei giocatori al suo interno");
-
-		return tavoloRepository.save(tavoloInstance);
+	public void aggiorna(Tavolo tavoloInstance) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
+		Tavolo tavoloDaEliminare = caricaSingoloElementoEager(tavoloInstance.id());
+		if(utenteInSessionUtente.ruoli().stream().anyMatch(r -> r.codice().equals(Ruolo.ROLE_SPECIAL_USER))
+				&& !(utenteInSessionUtente.id() == tavoloDaEliminare.utenteCheCreaIlTavolo().id()))
+			throw new TavoloNotFoundException("impossibile aggiornare un tavolo non creato da te se hai ruolo special player");
+		
+		repository.save(tavoloInstance);
 	}
 
 	@Override
 	@Transactional
-	public Tavolo inserisciNuovo(Tavolo tavoloInstance) {
-		if (tavoloInstance.dataCreazione() == null) {
-			tavoloInstance.dataCreazione(LocalDate.now());
-		}
-		return tavoloRepository.save(tavoloInstance);
+	public void inserisciNuovo(Tavolo tavoloInstance) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
+		tavoloInstance.utenteCheCreaIlTavolo(utenteInSessionUtente);
+		
+		tavoloInstance.dataCreazione(LocalDate.now());
+		if(tavoloInstance.cifraMinima() == null)
+			tavoloInstance.cifraMinima();
+		repository.save(tavoloInstance);
 	}
 
 	@Override
 	@Transactional
 	public void rimuovi(Long idToRemove) {
-		tavoloRepository.deleteById(idToRemove);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
+		Tavolo tavoloDaEliminare = caricaSingoloElementoEager(idToRemove);
+		if(utenteInSessionUtente.ruoli().stream().anyMatch(r -> r.codice().equals(Ruolo.ROLE_SPECIAL_USER))
+				&& !(utenteInSessionUtente.id() == tavoloDaEliminare.utenteCheCreaIlTavolo().id()))
+			throw new TavoloNotFoundException("impossibile eliminare un tavolo non creato da te se hai ruolo special player");
+			
+		repository.deleteById(idToRemove);
 	}
 
 	@Override
-	public List<Tavolo> findByDenominazione(String denominazione) {
-		return tavoloRepository.findByDenominazione(denominazione);
+	public Tavolo caricaSingoloElementoEager(Long id) {
+		return repository.findIdByEager(id);
 	}
 
 	@Override
-	public List<Tavolo> listAll() {
-		return (List<Tavolo>) tavoloRepository.findAll();
+	public List<Tavolo> listAllByEsperienzaAccumulata() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
+		return repository.listAllByEsperienzaMinima(utenteInSessionUtente.esperienzaAccumulata());
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Tavolo> findByExample(Tavolo example) {
-		return tavoloRepository.findByExample(example);
+	public List<Tavolo> listAllByMyCreati() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSessionUtente = utenteRepository.findByUsername(username).orElse(null);
+		return repository.listAllByMyCreati(utenteInSessionUtente.id());
 	}
-
+	
 	@Override
-	@Transactional(readOnly = true)
-	public List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id) {
-		return tavoloRepository.findByExampleSpecialPlayer(example, id);
+	public void inserisciNuovoDaApplication(Tavolo tavoloInstance) {
+		tavoloInstance.dataCreazione(LocalDate.now());
+		if(tavoloInstance.cifraMinima() == null)
+			tavoloInstance.cifraMinima();
+		repository.save(tavoloInstance);
 	}
 
 }

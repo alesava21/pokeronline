@@ -126,7 +126,7 @@ public class PokeronlineApplication implements CommandLineRunner{
 				.dataCreazione(LocalDate.now())
 				.utenteCheCreaIlTavolo(utenteServiceInstance.listAllUtenti().get(0))
 				.build();
-		tavoloService.inserisciNuovo(tavolo1);
+		tavoloService.inserisciNuovoDaApplication(tavolo1);
 	}
 
 }
