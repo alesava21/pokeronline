@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 
 import it.prova.pokeronline.model.Ruolo;
 import it.prova.pokeronline.model.StatoUtente;
@@ -98,5 +100,31 @@ public class UtenteDTO {
 		return utenteDTOlist.stream().map(utente -> {
 			return utente.buildUtenteModel(true);
 		}).collect(Collectors.toList());
+	}
+	
+
+	public static UtenteDTO buildUtenteDTOFromModelNoPassword(Utente utenteModel) {
+		UtenteDTO result = UtenteDTO.builder()
+				.id(utenteModel.id())
+				.username(utenteModel.username())
+				.nome(utenteModel.nome())
+				.cognome(utenteModel.cognome())
+				.dataRegistrazione(utenteModel.dataRegistrazione())
+				.stato(utenteModel.stato())
+				.esperienzaAccumulata(utenteModel.esperienzaAccumulata())
+				.creditoAccumulato(utenteModel.creditoAccumulato())
+				.build();
+
+		if (!utenteModel.ruoli().isEmpty())
+			result.ruoliIds = utenteModel.ruoli().stream().map(r -> r.id()).collect(Collectors.toList())
+					.toArray(new Long[] {});
+
+		return result;
+	}
+	
+
+	public static Set<UtenteDTO> buildUtenteDTOSetFromModelSet(Set<Utente> modelList) {
+		return (Set<UtenteDTO>) modelList.stream().map(entity -> UtenteDTO.buildUtenteDTOFromModelNoPassword(entity))
+				.collect(Collectors.toSet());
 	}
 }

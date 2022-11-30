@@ -65,6 +65,7 @@ public class TavoloServiceImpl implements TavoloService {
 	}
 
 	@Override
+	@Transactional
 	public Tavolo inserisciNuovo(Tavolo tavoloInstance) {
 		if (tavoloInstance.dataCreazione() == null) {
 			tavoloInstance.dataCreazione(LocalDate.now());
@@ -86,5 +87,9 @@ public class TavoloServiceImpl implements TavoloService {
 	public List<Tavolo> findByDenominazione(String denominazione) {
 		return tavoloRepository.findByDenominazione(denominazione);
 	}
+
+	@Override
+	public List<Tavolo> listAll() {
+		return (List<Tavolo>)tavoloRepository.findAll();	}
 
 }

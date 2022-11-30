@@ -3,10 +3,13 @@ package it.prova.pokeronline.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import it.prova.pokeronline.model.Tavolo;
 import lombok.AllArgsConstructor;
@@ -21,17 +24,19 @@ import lombok.Setter;
 public class TavoloDTO {
 	
 	private Long id;
-	@Positive
+	@PositiveOrZero
 	private Integer esperienzaMinima;
-	@Positive
+	@PositiveOrZero
 	private Integer cifraMinima;
 	@NotBlank
 	private String denominazione;
 	private LocalDate dataCreazione;
 	@NotNull
+	@JsonIgnoreProperties(value = { "tavolo" })
 	private UtenteDTO utenteCheCreaIlTavolo;
 	
 	@Builder.Default
+	@JsonIgnoreProperties(value = { "tavolo" })
 	private List<UtenteDTO> utentiAlTavolo = new ArrayList<>();
 	
 	public Tavolo buildTavoloModel() {
@@ -59,6 +64,18 @@ public class TavoloDTO {
 				.build();
 				
 		return result;
+	}
+	
+	public static List<TavoloDTO> createListDTOFromModel(List<Tavolo> tavoloListModel){
+		return tavoloListModel.stream().map(tavolo -> {
+			return TavoloDTO.buildTavoloDTOFromModel(tavolo);
+		}).collect(Collectors.toList());
+	}
+	
+	public static List<Tavolo> createListModelFromDTO(List<TavoloDTO> tavoloListDTO){
+		return tavoloListDTO.stream().map(tavolo -> {
+			return tavolo.buildTavoloModel();
+		}).collect(Collectors.toList());
 	}
 
 }
