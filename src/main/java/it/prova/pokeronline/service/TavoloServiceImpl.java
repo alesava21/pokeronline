@@ -13,7 +13,7 @@ import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.repository.tavolo.TavoloRepository;
 import it.prova.pokeronline.repository.utente.UtenteRepository;
-import it.prova.pokeronline.web.api.exception.GiocatoriPresentiAlTavoloException;
+import it.prova.pokeronline.web.api.exception.NonFaiParteDiQuestoTavoloException;
 import it.prova.pokeronline.web.api.exception.NonSeiPresenteANessunTavoloException;
 import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
 
@@ -113,6 +113,21 @@ public class TavoloServiceImpl implements TavoloService{
 		}
 		return resul;
 	}
+
+	@Override
+	@Transactional
+	public void abbandonaPartita(Long idTavolo) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteInSession = utenteRepository.findByUsername(username).orElse(null);
+		Tavolo tavoloACuiSiStaGiocando = repository.findById(idTavolo).orElse(null);
+		
+		if (tavoloACuiSiStaGiocando == null)
+			throw new TavoloNotFoundException("tavolo non trovato");
+		
+		tavoloACuiSiStaGiocando.utentiAlTavolo().remove(utenteInSession);
+		repository.save(tavoloACuiSiStaGiocando);
+	}
+	
 
 	
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,6 +75,11 @@ public class GameController {
 		// se faccio parte del tavolo gioco direttamente
 		return UtenteDTO.buildUtenteDTOFromModel(utenteService.giocaPartita(inSessione));
 	}
-
+	
+	@PostMapping("/abbandonaPartita/{idTavolo}")
+	@ResponseStatus(HttpStatus.OK)
+	public void abbandonaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {
+		tavoloService.abbandonaPartita(idTavolo);
+	}
 
 }
