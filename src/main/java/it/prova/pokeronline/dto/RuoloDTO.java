@@ -15,8 +15,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Builder
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Accessors(fluent = true)
 public class RuoloDTO {
@@ -34,11 +36,11 @@ public class RuoloDTO {
 			return RuoloDTO.buildRuoloDTOFromModel(ruoloEntity);
 		}).collect(Collectors.toList());
 	}
-	
+
 	public static List<RuoloDTO> createRuoloDTOListFromModelList(List<Ruolo> modelListInput) {
 		return modelListInput.stream().map(ruoloEntity -> {
 			return RuoloDTO.buildRuoloDTOFromModel(ruoloEntity);
 		}).collect(Collectors.toList());
 	}
-	
+
 }

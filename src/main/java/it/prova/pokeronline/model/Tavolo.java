@@ -24,9 +24,12 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent = true)
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "tavolo")
 public class Tavolo {
@@ -42,11 +45,11 @@ public class Tavolo {
 	private String denominazione;
 	@Column(name = "datacreazione")
 	private LocalDate dataCreazione;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "utentechecreailtavolo_id", nullable = false)
 	private Utente utenteCheCreaIlTavolo;
-	
+
 	@Builder.Default
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Utente> utentiAlTavolo = new ArrayList<>();

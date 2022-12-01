@@ -17,28 +17,22 @@ public class JWTUtil {
 
 	@Value("${jwt-secret}")
 	private String secret;
-	
+
 	@Value("${jwt.expiration}")
 	private Long jwtExpirationMs;
 
 	// Method to sign and create a JWT using the injected secret
 	public String generateToken(String username) throws IllegalArgumentException, JWTCreationException {
-		return JWT.create()
-				.withSubject("User Details")
-				.withClaim("username", username)
-				.withIssuedAt(new Date())
-				.withIssuer("RACCOLTAFILMSPRINGREST")
-				.withExpiresAt(new Date((new Date()).getTime() + jwtExpirationMs))
+		return JWT.create().withSubject("User Details").withClaim("username", username).withIssuedAt(new Date())
+				.withIssuer("RACCOLTAFILMSPRINGREST").withExpiresAt(new Date((new Date()).getTime() + jwtExpirationMs))
 				.sign(Algorithm.HMAC256(secret));
 	}
 
 	// Method to verify the JWT and then decode and extract the username stored in
 	// the payload of the token
 	public String validateTokenAndRetrieveSubject(String token) throws JWTVerificationException {
-		JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-				.withSubject("User Details")
-				.withIssuer("RACCOLTAFILMSPRINGREST")
-				.build();
+		JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).withSubject("User Details")
+				.withIssuer("RACCOLTAFILMSPRINGREST").build();
 		DecodedJWT jwt = verifier.verify(token);
 		return jwt.getClaim("username").asString();
 	}

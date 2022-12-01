@@ -162,7 +162,7 @@ public class TavoloServiceImpl implements TavoloService {
 //			}
 //		}
 		/*
-		 * se abbiamo il contatore che e == a 0 significa che l'utente non e presente al
+		 * se abbiamo il contatore che a == a 0 significa che l'utente non e presente al
 		 * tavolo
 		 */
 		if (contatore == 0)

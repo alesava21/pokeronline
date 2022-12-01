@@ -36,8 +36,7 @@ public class UtenteController {
 
 		// estraggo le info dal principal
 		Utente utenteLoggato = utenteService.findByUsername(username);
-		List<String> ruoli = utenteLoggato.ruoli().stream().map(item -> item.codice())
-				.collect(Collectors.toList());
+		List<String> ruoli = utenteLoggato.ruoli().stream().map(item -> item.codice()).collect(Collectors.toList());
 
 		return ResponseEntity.ok(new UtenteInfoJWTResponseDTO(utenteLoggato.nome(), utenteLoggato.cognome(),
 				utenteLoggato.username(), ruoli));

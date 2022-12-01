@@ -28,12 +28,11 @@ public interface UtenteService {
 	public void changeUserAbilitation(Long utenteInstanceId);
 
 	public Utente findByUsername(String username);
-	
+
 	public Integer compraCredito(Integer credito);
-	
+
 	public Utente giocaPartita(Utente inSessione);
-	
+
 	public Utente partecipaEGiocaPartita(Utente inSessione, Tavolo tavoloInstance);
-	
 
 }

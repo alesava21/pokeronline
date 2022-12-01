@@ -9,14 +9,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -28,8 +26,11 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Builder
-@Getter @Setter @ToString
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent = true)
 @Entity
 @Table(name = "utente")
@@ -54,15 +55,15 @@ public class Utente {
 	private Integer esperienzaAccumulata;
 	@Column(name = "creditoaccumulato")
 	private Integer creditoAccumulato;
-	
+
 	@Enumerated(EnumType.STRING)
 	private StatoUtente stato;
-	
+
 	@Builder.Default
 	@ManyToMany
 	@JoinTable(name = "utente_ruolo", joinColumns = @JoinColumn(name = "utente_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ruolo_id", referencedColumnName = "ID"))
 	private List<Ruolo> ruoli = new ArrayList<>();
-	
+
 	public boolean isAttivo() {
 		return this.stato != null && this.stato.equals(StatoUtente.ATTIVO);
 	}

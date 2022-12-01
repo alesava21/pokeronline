@@ -23,7 +23,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "ruolo")
 public class Ruolo {
-	
+
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_SPECIAL_USER = "ROLE_SPECIAL_USER";
 	public static final String ROLE_CLASSIC_USER = "ROLE_CLASSIC_USER";

@@ -93,7 +93,7 @@ public class PokeronlineApplication implements CommandLineRunner {
 			utenteServiceInstance.changeUserAbilitation(user1.id());
 		}
 
-		Tavolo tavolo1 = Tavolo.builder().id(1L).esperienzaMinima(1).cifraMinima(100).denominazione("denominazione1")
+		Tavolo tavolo1 = Tavolo.builder().esperienzaMinima(1).cifraMinima(100).denominazione("denominazione1")
 				.dataCreazione(LocalDate.now()).utenteCheCreaIlTavolo(utenteServiceInstance.listAllUtenti().get(0))
 				.build();
 		tavoloService.inserisciNuovoDaApplication(tavolo1);

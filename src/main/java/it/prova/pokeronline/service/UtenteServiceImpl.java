@@ -23,9 +23,6 @@ public class UtenteServiceImpl implements UtenteService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private TavoloService tavoloService;
 
 	public List<Utente> listAllUtenti() {
 		return (List<Utente>) repository.findAll();
@@ -53,8 +50,7 @@ public class UtenteServiceImpl implements UtenteService {
 
 	@Transactional
 	public void inserisciNuovo(Utente utenteInstance) {
-		utenteInstance.stato(StatoUtente.CREATO)
-				.password(passwordEncoder.encode(utenteInstance.password()));
+		utenteInstance.stato(StatoUtente.CREATO).password(passwordEncoder.encode(utenteInstance.password()));
 		utenteInstance.dateCreated(new Date());
 		repository.save(utenteInstance);
 	}
@@ -99,14 +95,15 @@ public class UtenteServiceImpl implements UtenteService {
 	@Override
 	@Transactional
 	public Integer compraCredito(Integer credito) {
-		Utente inSesione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-		
+		Utente inSesione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+				.get();
+
 		if (inSesione.creditoAccumulato() == null) {
 			inSesione.creditoAccumulato(credito);
-		}else {
+		} else {
 			inSesione.creditoAccumulato(inSesione.creditoAccumulato() + credito);
 		}
-		
+
 		repository.save(inSesione);
 		return inSesione.creditoAccumulato();
 	}
@@ -114,7 +111,7 @@ public class UtenteServiceImpl implements UtenteService {
 	@Override
 	@Transactional
 	public Utente giocaPartita(Utente inSessione) {
-		
+
 		inSessione.creditoAccumulato(inSessione.creditoAccumulato() + UtenteServiceImpl.simulaPartita());
 		if (inSessione.creditoAccumulato() < 0)
 			inSessione.creditoAccumulato(0);

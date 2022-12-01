@@ -18,8 +18,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TavoloDTO {
 	private Long id;
@@ -31,59 +33,46 @@ public class TavoloDTO {
 	private String denominazione;
 	private LocalDate dataCreazione;
 	private UtenteDTO utenteCheCreaIlTavolo;
-	
+
 	@Builder.Default
 	private List<UtenteDTO> utentiAlTavolo = new ArrayList<>();
-	
+
 	public Tavolo buildTavoloModel() {
-		Tavolo result = Tavolo.builder()
-				.id(id)
-				.esperienzaMinima(esperienzaMinima)
-				.cifraMinima(cifraMinima)
-				.denominazione(denominazione)
-				.dataCreazione(dataCreazione)
-				.utentiAlTavolo(UtenteDTO.createUtenteListModelFromDTO(utentiAlTavolo))
-				.build();
-		
+		Tavolo result = Tavolo.builder().id(id).esperienzaMinima(esperienzaMinima).cifraMinima(cifraMinima)
+				.denominazione(denominazione).dataCreazione(dataCreazione)
+				.utentiAlTavolo(UtenteDTO.createUtenteListModelFromDTO(utentiAlTavolo)).build();
+
 		if (utenteCheCreaIlTavolo != null) {
 			result.utenteCheCreaIlTavolo(utenteCheCreaIlTavolo.buildUtenteModel(true));
 		}
 		return result;
 	}
-	
+
 	public static TavoloDTO buildTavoloDTOFromModel(Tavolo tavoloModel) {
-		TavoloDTO result = TavoloDTO.builder()
-				.id(tavoloModel.id())
-				.esperienzaMinima(tavoloModel.esperienzaMinima())
-				.cifraMinima(tavoloModel.cifraMinima())
-				.dataCreazione(tavoloModel.dataCreazione())
+		TavoloDTO result = TavoloDTO.builder().id(tavoloModel.id()).esperienzaMinima(tavoloModel.esperienzaMinima())
+				.cifraMinima(tavoloModel.cifraMinima()).dataCreazione(tavoloModel.dataCreazione())
 				.denominazione(tavoloModel.denominazione())
 				.utenteCheCreaIlTavolo(UtenteDTO.buildUtenteDTOFromModel(tavoloModel.utenteCheCreaIlTavolo()))
-				.utentiAlTavolo(UtenteDTO.createUtenteListDTOFromModel(tavoloModel.utentiAlTavolo()))
-				.build();
-				
+				.utentiAlTavolo(UtenteDTO.createUtenteListDTOFromModel(tavoloModel.utentiAlTavolo())).build();
+
 		return result;
 	}
-	
+
 	public static TavoloDTO buildTavoloDTOFromModelLastGame(Tavolo tavoloModel) {
-		TavoloDTO result = TavoloDTO.builder()
-				.id(tavoloModel.id())
-				.esperienzaMinima(tavoloModel.esperienzaMinima())
-				.cifraMinima(tavoloModel.cifraMinima())
-				.dataCreazione(tavoloModel.dataCreazione())
-				.denominazione(tavoloModel.denominazione())
-				.build();
-				
+		TavoloDTO result = TavoloDTO.builder().id(tavoloModel.id()).esperienzaMinima(tavoloModel.esperienzaMinima())
+				.cifraMinima(tavoloModel.cifraMinima()).dataCreazione(tavoloModel.dataCreazione())
+				.denominazione(tavoloModel.denominazione()).build();
+
 		return result;
 	}
-	
-	public static List<TavoloDTO> createListDTOFromModel(List<Tavolo> tavoloListModel){
+
+	public static List<TavoloDTO> createListDTOFromModel(List<Tavolo> tavoloListModel) {
 		return tavoloListModel.stream().map(tavolo -> {
 			return TavoloDTO.buildTavoloDTOFromModel(tavolo);
 		}).collect(Collectors.toList());
 	}
-	
-	public static List<Tavolo> createListModelFromDTO(List<TavoloDTO> tavoloListDTO){
+
+	public static List<Tavolo> createListModelFromDTO(List<TavoloDTO> tavoloListDTO) {
 		return tavoloListDTO.stream().map(tavolo -> {
 			return tavolo.buildTavoloModel();
 		}).collect(Collectors.toList());
